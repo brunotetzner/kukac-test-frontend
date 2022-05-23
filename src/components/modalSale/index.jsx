@@ -15,11 +15,12 @@ import {
 import { useState } from "react";
 import { StyledInput } from "../styledInput";
 import { StyledButton } from "../styledButton";
-import { searchForPalindromes } from "../../services/api";
-export const ModalPalindromo = ({ isOpen, onClose }) => {
-  const [maxInputValue, setMaxInputValue] = useState();
-  const [minInputValue, setMinInputValue] = useState();
-  const [returnedPalindromes, setReturnedPalindromes] = useState();
+import { calculateSale } from "../../services/api";
+import { CardSale } from "../cardSale";
+export const ModalSale = ({ isOpen, onClose }) => {
+  const [receivedValue, setReceivedValue] = useState();
+  const [saleValue, setSaleValue] = useState();
+  const [returned, setReturned] = useState();
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay bg="rgb(217, 217, 217, 0.8)" />
@@ -41,30 +42,30 @@ export const ModalPalindromo = ({ isOpen, onClose }) => {
           textAlign="center"
           borderRadius="5px"
         >
-          Calculadora de palindromos
+          Calculadora de vendas
         </ModalHeader>
         <ModalBody h="90%">
           <Box w="100%" h="35%" display="flex" flexDirection="row">
             <Flex w="50%" h="100%" flexDirection="column" marginLeft="5%">
               <Text fontFamily="Roboto mono" color="#57677E" fontSize="18px">
-                Digite o numero do qual a contagem partira:
+                Digite o valor da venda:
               </Text>
               <StyledInput
-                placeholder={"inicio"}
-                width="50px"
-                setState={setMinInputValue}
+                placeholder={"Valor da venda"}
+                width="150px"
+                setState={setSaleValue}
               />
               <Box mt="3%">
                 <StyledButton
                   width="100px"
-                  text="Pesquisar"
+                  text="Calcular"
                   callback={() =>
-                    searchForPalindromes(
+                    calculateSale(
                       {
-                        initialValue: minInputValue,
-                        finalValue: maxInputValue,
+                        saleValue: saleValue,
+                        receivedValue: receivedValue,
                       },
-                      setReturnedPalindromes
+                      setReturned
                     )
                   }
                 />
@@ -83,12 +84,12 @@ export const ModalPalindromo = ({ isOpen, onClose }) => {
                 fontSize="18px"
                 textAlign="end"
               >
-                Digite o numero onde a contagem devera terminar:
+                Digite o valor entregue pelo cliente
               </Text>
               <StyledInput
-                placeholder={"fim"}
-                width="50px"
-                setState={setMaxInputValue}
+                placeholder={"Valor recebido"}
+                width="150px"
+                setState={setReceivedValue}
               />
             </Flex>
           </Box>
@@ -104,11 +105,20 @@ export const ModalPalindromo = ({ isOpen, onClose }) => {
           >
             Resultados
           </Heading>
-          <Center w="90%" ml="5%">
+          <Center w="100%">
             <Text fontFamily="Roboto mono" color="#57677E" fontSize="15px">
-              {returnedPalindromes
-                ? returnedPalindromes.map((number) => `${number}, `)
-                : "Faça uma pesquisa :)"}
+              {returned ? (
+                <CardSale
+                  saleValue={returned.saleValue}
+                  receivedValue={returned.receivedValue}
+                  change={returned.change}
+                  oneNote={returned.oneNote}
+                  tenNote={returned.tenNote}
+                  oneHundredNote={returned.oneHundredNote}
+                />
+              ) : (
+                "Os resultados dos seus calculos aparecerão aqui :)"
+              )}
             </Text>
           </Center>
         </ModalBody>

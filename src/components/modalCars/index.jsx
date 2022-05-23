@@ -60,7 +60,7 @@ export const ModalCars = ({ isOpen, onClose }) => {
           fontFamily="Roboto mono"
           backgroundColor="#F3C139"
           color="#57677E"
-          fontSize="45px"
+          fontSize="37px"
           textAlign="center"
         >
           Cadastrar carro

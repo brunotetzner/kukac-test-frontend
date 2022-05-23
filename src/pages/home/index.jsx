@@ -4,19 +4,25 @@ import { CardHome } from "../../components/cardHome/index.jsx";
 import { ModalPalindromo } from "../../components/modalPalindromos/index.jsx";
 import { ModalCars } from "../../components/modalCars/index.jsx";
 import { ModalMotorCycle } from "../../components/modalMotorCycle/index.jsx";
-
+import { ModalSale } from "../../components/modalSale";
 import { useNavigate } from "react-router-dom";
 
 import Calculadora from "../../assets/images/calc.jpeg";
 import Carro from "../../assets/images/car.png";
 import Moto from "../../assets/images/moto.png";
 import Cep from "../../assets/images/cep.png";
+import Venda from "../../assets/images/sale.png";
 
 const HomePage = () => {
   const {
     isOpen: isOpenModalPalindromes,
     onOpen: onOpenModalPalindromes,
     onClose: onCloseModalPalindromes,
+  } = useDisclosure();
+  const {
+    isOpen: isOpenModalSales,
+    onOpen: onOpenModalSales,
+    onClose: onCloseModalSales,
   } = useDisclosure();
 
   const {
@@ -50,6 +56,11 @@ const HomePage = () => {
       image: Cep,
       callback: () => navigate("/search/cep"),
     },
+    {
+      name: "Calculadora de vendas",
+      image: Venda,
+      callback: onOpenModalSales,
+    },
   ];
 
   return (
@@ -75,6 +86,7 @@ const HomePage = () => {
           isOpen={isOpenModalMotorcycle}
           onClose={onCloseModalMotorcycle}
         />
+        <ModalSale isOpen={isOpenModalSales} onClose={onCloseModalSales} />
 
         <Heading
           fontFamily="Roboto mono"
@@ -87,12 +99,8 @@ const HomePage = () => {
           Utilitarios
         </Heading>
         <Flex
-          border="4px solid"
-          borderColor="#3E506C"
-          borderRadius="5px"
-          w="80%"
-          h="62%"
-          bg="white"
+          w="85%"
+          h="70%"
           marginBottom="10%"
           justifyContent="space-evenly"
           alignItems="center"

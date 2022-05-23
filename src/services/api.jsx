@@ -16,6 +16,18 @@ export const searchForPalindromes = async (value, setState) => {
       console.log("<ERRO>", err);
     });
 };
+export const calculateSale = async (value, setState) => {
+  api
+    .post("/api/sales", value)
+    .then((response) => {
+      toast.success("Compra calculada com sucesso");
+      setState(response.data.objToReturn);
+    })
+    .catch((err) => {
+      toast.error("Algo deu errado. Revise as informações e tente novamente");
+      console.log("<ERRO>", err);
+    });
+};
 
 export const postCar = async (value, setState) => {
   api
