@@ -1,8 +1,8 @@
 import { Center, Image, Text, Box } from "@chakra-ui/react";
-const CardHome = ({ name, image, openModal }) => {
+const CardHome = ({ name, image, callback }) => {
   return (
     <Box
-      onClick={openModal}
+      onClick={callback}
       cursor="pointer"
       borderRadius="5px"
       w="165px"

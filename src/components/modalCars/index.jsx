@@ -9,27 +9,52 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react";
-import { useState } from "react";
+
+import { useEffect, useState } from "react";
+
 import { StyledInput } from "../styledInput";
 import { StyledButton } from "../styledButton";
+import { CardPostedCar } from "../cardPostedCar";
+import { postCar } from "../../services/api";
+
 export const ModalCars = ({ isOpen, onClose }) => {
   const [carModel, setCarModel] = useState();
   const [carFabricationYear, setFabricationYear] = useState();
   const [carMark, setCarMark] = useState();
   const [carPortsQuantity, setCarPortsQuantity] = useState();
   const [carMaxPeoplesQuantity, setCarMaxPeoplesQuantity] = useState();
-  console.log(
+  const [objectToDoRequest, setObjectToDoRequest] = useState({});
+  const [postedCar, setPostedCar] = useState({});
+
+  useEffect(() => {
+    setObjectToDoRequest({
+      model: carModel,
+      fabricationYear: carFabricationYear,
+      peopleQuantity: carMaxPeoplesQuantity,
+      mark: carMark,
+      portsQuantity: carPortsQuantity,
+    });
+  }, [
     carModel,
     carFabricationYear,
     carMark,
     carPortsQuantity,
-    carMaxPeoplesQuantity
-  );
+    carMaxPeoplesQuantity,
+  ]);
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay bg="rgb(217, 217, 217, 0.8)" />
-      <ModalContent bg="white" w="80%" h="80%" ml="10%" mt="4%">
+      <ModalContent
+        bg="white"
+        w="80%"
+        h="80%"
+        ml="10%"
+        mt="4%"
+        borderRadius="5px"
+      >
         <ModalHeader
+          borderRadius="5px"
           w="100%"
           h="12%"
           fontFamily="Roboto mono"
@@ -89,7 +114,12 @@ export const ModalCars = ({ isOpen, onClose }) => {
               setState={setCarMaxPeoplesQuantity}
             />
             <Box mt="3%">
-              <StyledButton width="200px" height="30px" text="Cadastrar" />
+              <StyledButton
+                width="200px"
+                height="30px"
+                text="Cadastrar"
+                callback={() => postCar(objectToDoRequest, setPostedCar)}
+              />
             </Box>
           </Flex>
           <Flex
@@ -98,10 +128,11 @@ export const ModalCars = ({ isOpen, onClose }) => {
             w="25%"
             flexDirection="column"
             marginRight="5%"
-            alignItems="flex-end"
+            alignCenter="flex-end"
             border="3px solid"
             borderColor="#F3C139"
             borderRadius="7px"
+            justifyContent="center"
           >
             <Text
               w="100%"
@@ -110,8 +141,19 @@ export const ModalCars = ({ isOpen, onClose }) => {
               fontSize="18px"
               textAlign="center"
             >
-              Resultado
+              {postedCar.model ? "Resultado" : "O resultado aparecera aqui"}
             </Text>
+            {postedCar.model ? (
+              <CardPostedCar
+                model={postedCar.model}
+                fabricationYear={postedCar.fabricationYear}
+                peopleQuantity={postedCar.peopleQuantity}
+                mark={postedCar.mark}
+                portsQuantity={postedCar.portsQuantity}
+              />
+            ) : (
+              ""
+            )}
           </Flex>
         </ModalBody>
 

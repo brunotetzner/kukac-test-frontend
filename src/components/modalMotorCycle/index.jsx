@@ -10,9 +10,11 @@ import {
   ModalOverlay,
 } from "@chakra-ui/react";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { StyledInput } from "../styledInput";
 import { StyledButton } from "../styledButton";
+import { CardPostedMotorCycle } from "../cardPostedMotorCycle";
+import { postMotorCycle } from "../../services/api";
 
 export const ModalMotorCycle = ({ isOpen, onClose }) => {
   const [motorCycleModel, setMotorCycleModel] = useState();
@@ -21,18 +23,36 @@ export const ModalMotorCycle = ({ isOpen, onClose }) => {
     useState();
   const [motorCycleMark, setMotorCycleMark] = useState();
   const [motorCycleWheelsQuantity, setMotorCycleWheelsQuantity] = useState();
+  const [objectToDoRequest, setObjectToDoRequest] = useState({});
+  const [postedMotorCycle, setPostedMotorCycle] = useState({});
 
-  console.log(
+  useEffect(() => {
+    setObjectToDoRequest({
+      model: motorCycleModel,
+      fabricationYear: motorCycleFabricationYear,
+      peopleQuantity: motorCycleMaxPeoplesQuantity,
+      mark: motorCycleMark,
+      wheels: motorCycleWheelsQuantity,
+    });
+  }, [
     motorCycleModel,
     motorCycleFabricationYear,
+    motorCycleMaxPeoplesQuantity,
     motorCycleMark,
     motorCycleWheelsQuantity,
-    motorCycleMaxPeoplesQuantity
-  );
+  ]);
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay bg="rgb(217, 217, 217, 0.8)" />
-      <ModalContent bg="white" w="80%" h="80%" ml="10%" mt="4%">
+      <ModalContent
+        bg="white"
+        w="80%"
+        h="80%"
+        ml="10%"
+        mt="4%"
+        borderRadius="5px"
+      >
         <ModalHeader
           w="100%"
           h="12%"
@@ -41,6 +61,7 @@ export const ModalMotorCycle = ({ isOpen, onClose }) => {
           color="#57677E"
           fontSize="45px"
           textAlign="center"
+          borderRadius="5px"
         >
           Cadastrar moto
         </ModalHeader>
@@ -94,6 +115,9 @@ export const ModalMotorCycle = ({ isOpen, onClose }) => {
             />
             <Box mt="3%">
               <StyledButton
+                callback={() =>
+                  postMotorCycle(objectToDoRequest, setPostedMotorCycle)
+                }
                 width="200px"
                 height="30px"
                 text="Cadastrar
@@ -107,7 +131,8 @@ export const ModalMotorCycle = ({ isOpen, onClose }) => {
             w="25%"
             flexDirection="column"
             marginRight="5%"
-            alignItems="flex-end"
+            alignItems="center"
+            justifyContent="center"
             border="3px solid"
             borderColor="#F3C139"
             borderRadius="7px"
@@ -119,8 +144,21 @@ export const ModalMotorCycle = ({ isOpen, onClose }) => {
               fontSize="18px"
               textAlign="center"
             >
-              Resultado
+              {postedMotorCycle.model
+                ? "Resultado"
+                : "O resultado aparecera aqui"}
             </Text>
+            {postedMotorCycle.model ? (
+              <CardPostedMotorCycle
+                model={postedMotorCycle.model}
+                fabricationYear={postedMotorCycle.fabricationYear}
+                peopleQuantity={postedMotorCycle.peopleQuantity}
+                mark={postedMotorCycle.mark}
+                wheels={postedMotorCycle.wheels}
+              />
+            ) : (
+              ""
+            )}
           </Flex>
         </ModalBody>
 

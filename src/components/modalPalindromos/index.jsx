@@ -11,17 +11,26 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react";
+
 import { useState } from "react";
 import { StyledInput } from "../styledInput";
 import { StyledButton } from "../styledButton";
+import { searchForPalindromes } from "../../services/api";
 export const ModalPalindromo = ({ isOpen, onClose }) => {
   const [maxInputValue, setMaxInputValue] = useState();
   const [minInputValue, setMinInputValue] = useState();
-
+  const [returnedPalindromes, setReturnedPalindromes] = useState();
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay bg="rgb(217, 217, 217, 0.8)" />
-      <ModalContent bg="white" w="80%" h="80%" ml="10%" mt="4%">
+      <ModalContent
+        bg="white"
+        w="80%"
+        h="80%"
+        ml="10%"
+        mt="4%"
+        borderRadius="5px"
+      >
         <ModalHeader
           w="100%"
           h="12%"
@@ -30,6 +39,7 @@ export const ModalPalindromo = ({ isOpen, onClose }) => {
           color="#57677E"
           fontSize="45px"
           textAlign="center"
+          borderRadius="5px"
         >
           Calculadora de palindromos
         </ModalHeader>
@@ -45,7 +55,19 @@ export const ModalPalindromo = ({ isOpen, onClose }) => {
                 setState={setMinInputValue}
               />
               <Box mt="3%">
-                <StyledButton width="100px" text="Pesquisar" />
+                <StyledButton
+                  width="100px"
+                  text="Pesquisar"
+                  callback={() =>
+                    searchForPalindromes(
+                      {
+                        initialValue: minInputValue,
+                        finalValue: maxInputValue,
+                      },
+                      setReturnedPalindromes
+                    )
+                  }
+                />
               </Box>
             </Flex>
             <Flex
@@ -82,10 +104,23 @@ export const ModalPalindromo = ({ isOpen, onClose }) => {
           >
             Resultados
           </Heading>
-          <Center></Center>
+          <Center w="90%" ml="5%">
+            <Text fontFamily="Roboto mono" color="#57677E" fontSize="15px">
+              {returnedPalindromes
+                ? returnedPalindromes.map((number) => `${number}, `)
+                : "Faça uma pesquisa :)"}
+            </Text>
+          </Center>
         </ModalBody>
 
-        <ModalFooter h="10%" mr="2%">
+        <ModalFooter
+          w="90%"
+          h="10%"
+          display="flex"
+          alignItems="center"
+          ml="5%"
+          justifyContent="flex-start"
+        >
           <StyledButton width="100px" text="Voltar" callback={onClose} />
         </ModalFooter>
       </ModalContent>

@@ -1,20 +1,16 @@
-import { Box, Flex, Text } from "@chakra-ui/react";
+import { Box, Flex, Text, Center } from "@chakra-ui/react";
 import { StyledButton } from "../../components/styledButton";
 import { StyledInput } from "../../components/styledInput";
-import { useState, useEffect } from "react";
-
+import { useState } from "react";
+import { FiLogOut } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
+import { getCep } from "../../services/api";
+import { CardCepInfo } from "../../components/cardCepInfo";
 const CepPage = () => {
-  const [cep1, setCep1] = useState();
-  const [cep2, setCep2] = useState();
-  const [cep3, setCep3] = useState();
-  const [cep4, setCep4] = useState();
-  const [cep5, setCep5] = useState();
-  const [allCeps, setAllCeps] = useState();
-
-  const [returnedCeps, setReturnedCeps] = useState();
-  useEffect(() => {
-    setAllCeps([cep1, cep2, cep3, cep4, cep5]);
-  }, [cep1, cep2, cep3, cep4, cep5]);
+  const [cep, setCep] = useState();
+  const [returnedCep, setReturnedCep] = useState();
+  const [error, setError] = useState(false);
+  const navegate = useNavigate();
   return (
     <>
       <Box
@@ -28,8 +24,18 @@ const CepPage = () => {
         fontFamily="Roboto mono"
         bg="#F3C139"
         boxSizing="0"
+        position="relative"
       >
         Buscar por cep
+        <Center
+          w="23px"
+          h="23px"
+          position="absolute"
+          right="6%"
+          _hover={{ transition: "0.6s", color: "white" }}
+        >
+          <FiLogOut cursor="pointer" onClick={() => navegate("/")} />
+        </Center>
       </Box>
       <Box w="100%" display="flex">
         <Flex
@@ -45,16 +51,18 @@ const CepPage = () => {
           borderRadius="7px"
         >
           <Text fontFamily="Roboto mono" color="#57677E" fontSize="18px">
-            Preencha os campos abaixo com ceps
+            Preencha o campo abaixo com um cep
           </Text>
 
-          <StyledInput placeholder={"cep1"} width="80%" setState={setCep1} />
-          <StyledInput placeholder={"cep2"} width="80%" setState={setCep2} />
-          <StyledInput placeholder={"cep3"} width="80%" setState={setCep3} />
-          <StyledInput placeholder={"cep4"} width="80%" setState={setCep4} />
-          <StyledInput placeholder={"cep5"} width="80%" setState={setCep5} />
+          <StyledInput placeholder={"cep1"} width="80%" setState={setCep} />
+
           <Box mt="3%">
-            <StyledButton width="200px" height="30px" text="Cadastrar" />
+            <StyledButton
+              callback={() => getCep(cep, setReturnedCep, setError)}
+              width="200px"
+              height="30px"
+              text="Buscar"
+            />
           </Box>
         </Flex>
         <Flex
@@ -67,7 +75,20 @@ const CepPage = () => {
           marginLeft="5%"
         >
           <Text fontFamily="Roboto mono" color="#57677E" fontSize="18px">
-            Resultados
+            {error === true ? (
+              "Não foi possivel achar o cep informado. Revise as informações e tente novamente"
+            ) : returnedCep ? (
+              <CardCepInfo
+                logradouro={returnedCep.logradouro}
+                complemento={returnedCep.complemento}
+                bairro={returnedCep.bairro}
+                localidade={returnedCep.localidade}
+                estado={returnedCep.estado}
+                ddd={returnedCep.ddd}
+              />
+            ) : (
+              ""
+            )}
           </Text>
         </Flex>
       </Box>

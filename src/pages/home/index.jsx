@@ -5,14 +5,12 @@ import { ModalPalindromo } from "../../components/modalPalindromos/index.jsx";
 import { ModalCars } from "../../components/modalCars/index.jsx";
 import { ModalMotorCycle } from "../../components/modalMotorCycle/index.jsx";
 
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Calculadora from "../../assets/images/calc.jpeg";
 import Carro from "../../assets/images/car.png";
 import Moto from "../../assets/images/moto.png";
 import Cep from "../../assets/images/cep.png";
-import { searchForPalindromes } from "../../services/api.jsx";
 
 const HomePage = () => {
   const {
@@ -39,25 +37,27 @@ const HomePage = () => {
     {
       name: "Calculadora de polindromos",
       image: Calculadora,
-      openModal: onOpenModalPalindromes,
+      callback: onOpenModalPalindromes,
     },
-    { name: "Cadastro de carros", image: Carro, openModal: onOpenModalCars },
+    { name: "Cadastro de carros", image: Carro, callback: onOpenModalCars },
     {
       name: "Cadastro de motos",
       image: Moto,
-      openModal: onOpenModalMotorcycle,
+      callback: onOpenModalMotorcycle,
     },
     {
       name: "Buscar por cep",
       image: Cep,
-      openModal: () => navigate("/search/cep"),
+      callback: () => navigate("/search/cep"),
     },
   ];
+
   return (
     <>
       <Center
-        maxW="100vw"
-        h="97vh"
+        position="relative"
+        w="100vw"
+        h="100vh"
         bg="#F3C139"
         margin="0"
         border="0"
@@ -70,6 +70,7 @@ const HomePage = () => {
         />
 
         <ModalCars isOpen={isOpenModalCars} onClose={onCloseModalCars} />
+
         <ModalMotorCycle
           isOpen={isOpenModalMotorcycle}
           onClose={onCloseModalMotorcycle}
@@ -80,14 +81,19 @@ const HomePage = () => {
           color="#3E506C"
           marginBottom="5%"
           fontSize="50px"
+          borderBottom="4px solid"
+          borderColor="#3E506C"
         >
           Utilitarios
         </Heading>
         <Flex
+          border="4px solid"
+          borderColor="#3E506C"
+          borderRadius="5px"
           w="80%"
           h="62%"
           bg="white"
-          marginBottom="5%"
+          marginBottom="10%"
           justifyContent="space-evenly"
           alignItems="center"
         >
@@ -95,7 +101,7 @@ const HomePage = () => {
             <CardHome
               name={info.name}
               image={info.image}
-              openModal={info.openModal}
+              callback={info.callback}
             />
           ))}
         </Flex>
